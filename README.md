@@ -4,8 +4,8 @@ OpenCV を使って顔写真を生成する関数を提供します．
 
 # Get started
 
-```bash
-$ pip install git+https://github.com/Yuu-Miino-NUE/crop_tools
+```shell
+pip install git+https://github.com/Yuu-Miino-NUE/crop_tools
 ```
 
 # 使用例
