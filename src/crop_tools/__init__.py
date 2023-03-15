@@ -129,6 +129,8 @@ def crop_face_dir(
         Output directory to put the generated jpeg files, by default 'output'
     verbose : bool, optional
         Flag to turn on the verbose mode, by default False
+    **options:
+        Options to pass to `crop_face` function.
     """
     dir_list = os.listdir(input_dir)
     jpg_list = [f for f in dir_list if f.endswith(EXTENSIONS)]
