@@ -10,7 +10,7 @@ setuptools.setup(
     description="Tools to crop by OpenCV",
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url="",
+    url="https://github.com/Yuu-Miino-NUE/crop_tools",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -18,4 +18,7 @@ setuptools.setup(
         "Operating System :: OS Independent"
     ],
     python_requires='>=3.10',
+    install_requires = [
+        'opencv-python'
+    ]
 )
