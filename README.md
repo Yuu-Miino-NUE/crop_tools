@@ -19,3 +19,8 @@ crop_face(input='input/test1.jpg', output='output/htu_test1.jpg', width=250, hei
 # For all files in a directory
 crop_face_dir(input_dir='input', output_dir='htu_output', verbose=True, width=200, height=200, margin=1.8, frame=True, classifier='default')
 ```
+
+# 関数の仕様
+英語ですが，Github pages にまとめました．ご参照ください．
+
+[https://yuu-miino-nue.github.io/crop_tools/](https://yuu-miino-nue.github.io/crop_tools/)
