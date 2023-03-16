@@ -37,7 +37,7 @@ def crop_face(
     ----------
     input : str
         Input filename.
-    output : str | None, optional
+    output : str or None, optional
         Output filename, by default None.
     width : int, optional
         Width of the output jpg, by default 300.
@@ -49,7 +49,7 @@ def crop_face(
         Flag to immediately show the output image, by default False.
     frame : bool, optional
         Flag to show the frame of the detected face, by default False.
-    classifier : Literal[ &#39;default&#39;, &#39;alt&#39;, &#39;alt2&#39;, ], optional
+    classifier : Literal[ 'default', 'alt', 'alt2', ], optional
         Cascade classifier, by default 'default'.
 
     Raises
