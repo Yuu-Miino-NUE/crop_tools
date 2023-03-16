@@ -21,6 +21,4 @@ crop_face_dir(input_dir='input', output_dir='htu_output', verbose=True, width=20
 ```
 
 # 関数の仕様
-英語ですが，Github pages にまとめました．ご参照ください．
-
-[https://yuu-miino-nue.github.io/crop_tools/](https://yuu-miino-nue.github.io/crop_tools/)
+英語ですが，[Github Pages](https://yuu-miino-nue.github.io/crop_tools/api/crop_tools.html) にまとめました．ご参照ください．
