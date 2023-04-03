@@ -29,7 +29,9 @@ def crop_face(
             'default',
             'alt',
             'alt2',
-        ] = 'default'
+        ] = 'default',
+        minSize: tuple[int, int] = (50, 50),
+        maxSize: tuple[int, int] = (100, 100)
     ):
     """Generate face cropped jpg file
 
@@ -51,6 +53,10 @@ def crop_face(
         Flag to show the frame of the detected face, by default False.
     classifier : Literal[ 'default', 'alt', 'alt2', ], optional
         Cascade classifier, by default 'default'.
+    minSize : Tuple[int, int], optional
+        Minimum possible object size.
+    maxSize : Tuple[int, int], optional
+        Maximum possible object size.
 
     Raises
     ------
@@ -80,7 +86,8 @@ def crop_face(
     )
 
     face_cascade = CascadeClassifier(cascade_path)
-    faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+    faces = face_cascade.detectMultiScale(image=gray, scaleFactor=1.1, minNeighbors=4,
+        minSize=minSize, maxSize=maxSize)
 
     for (x, y, w, h) in faces:
         center = array([y+h/2, x+w/2], dtype=int)
@@ -130,7 +137,7 @@ def crop_face_dir(
     verbose : bool, optional
         Flag to turn on the verbose mode, by default False
     **options:
-        Options to pass to `crop_face` function.
+        Options to pass to ``crop_face`` function.
     """
     dir_list = os.listdir(input_dir)
     jpg_list = [f for f in dir_list if f.endswith(EXTENSIONS)]

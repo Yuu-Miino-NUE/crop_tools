@@ -11,7 +11,7 @@ sys.path.insert(0, os.path.abspath('../../src'))
 project = 'crop_tools'
 copyright = '2023, Yuu Miino'
 author = 'Yuu Miino'
-release = '0.0.1'
+release = '0.0.2'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -27,7 +27,6 @@ exclude_patterns = []
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'pydata_sphinx_theme'
-html_static_path = ['_static']
 
 html_list = ["search-field.html", "sidebar-nav-bs.html"]
 
