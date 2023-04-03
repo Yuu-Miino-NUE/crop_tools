@@ -31,7 +31,9 @@ def crop_face(
             'alt2',
         ] = 'default',
         minSize: tuple[int, int] = (50, 50),
-        maxSize: tuple[int, int] = (100, 100)
+        maxSize: tuple[int, int] = (100, 100),
+        scaleFactor: float = 1.1,
+        minNeighbors: int = 4
     ):
     """Generate face cropped jpg file
 
@@ -40,23 +42,27 @@ def crop_face(
     input : str
         Input filename.
     output : str or None, optional
-        Output filename, by default None.
+        Output filename, by default ``None``.
     width : int, optional
-        Width of the output jpg, by default 300.
+        Width of the output jpg, by default ``300``.
     height : int, optional
-        Height of the output jpg, by default 300.
+        Height of the output jpg, by default ``300``.
     margin : float, optional
-        Ratio of margin to the detected face, by default 1.75.
+        Ratio of margin to the detected face, by default ``1.75``.
     show : bool, optional
-        Flag to immediately show the output image, by default False.
+        Flag to immediately show the output image, by default ``False``.
     frame : bool, optional
-        Flag to show the frame of the detected face, by default False.
+        Flag to show the frame of the detected face, by default ``False``.
     classifier : Literal[ 'default', 'alt', 'alt2', ], optional
-        Cascade classifier, by default 'default'.
+        Cascade classifier, by default ``default``.
     minSize : Tuple[int, int], optional
-        Minimum possible object size.
+        Minimum possible object size, by default ``(50, 50)``.
     maxSize : Tuple[int, int], optional
-        Maximum possible object size.
+        Maximum possible object size, by default ``(100, 100)``.
+    scaleFactor : float, optional
+        Parameter specifying how much the image size is reduced at each image scale, by default ``1.1``.
+    minNeihbors : int
+        Parameter specifying how many neighbors each candidate rectangle should have to retain it, by default ``4``.
 
     Raises
     ------
@@ -86,7 +92,7 @@ def crop_face(
     )
 
     face_cascade = CascadeClassifier(cascade_path)
-    faces = face_cascade.detectMultiScale(image=gray, scaleFactor=1.1, minNeighbors=4,
+    faces = face_cascade.detectMultiScale(image=gray, scaleFactor=scaleFactor, minNeighbors=minNeighbors,
         minSize=minSize, maxSize=maxSize)
 
     for (x, y, w, h) in faces:
