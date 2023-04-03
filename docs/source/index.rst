@@ -10,6 +10,6 @@ Docs for crop_tools
    :maxdepth: 1
    :glob:
 
-   headings/get_started
+   headings/getting_started
    headings/api_reference
 

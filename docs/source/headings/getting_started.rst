@@ -1,5 +1,5 @@
-Get started
-===========
+Getting started
+===============
 
 .. code-block:: shell
 
