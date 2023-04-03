@@ -137,11 +137,11 @@ def crop_face_dir(
     Parameters
     ----------
     input_dir : str, optional
-        Input directory including jpeg files, by default 'input'
+        Input directory including jpeg files, by default ``input``.
     output_dir : str, optional
-        Output directory to put the generated jpeg files, by default 'output'
+        Output directory to put the generated jpeg files, by default ``output``.
     verbose : bool, optional
-        Flag to turn on the verbose mode, by default False
+        Flag to turn on the verbose mode, by default ``False``
     **options:
         Options to pass to ``crop_face`` function.
     """
