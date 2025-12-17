@@ -1,5 +1,4 @@
-"""Tools to crop by OpenCV
-"""
+"""Tools to crop by OpenCV"""
 
 __all__ = ["crop_face", "crop_face_dir"]
 
@@ -10,17 +9,26 @@ from cv2 import (
     waitKey,
     resize,
     cvtColor,
-    CascadeClassifier,
-    COLOR_BGR2GRAY,
+    # CascadeClassifier,
+    # COLOR_BGR2GRAY,
+    COLOR_GRAY2BGR,
+    COLOR_BGRA2BGR,
     rectangle,
     Mat,
+    FaceDetectorYN,
 )
-from cv2.data import haarcascades
-from numpy import array, maximum, minimum
-from typing import Literal
+
+# from cv2.data import haarcascades
+from numpy import array, maximum, minimum, ndarray
+
+# from typing import Literal
 import os
 
 EXTENSIONS = ("jpg", "jpeg")
+MODEL_PATH = os.path.join(
+    os.path.dirname(__file__),
+    "face_detection_yunet_2023mar.onnx",
+)
 
 
 class ExtentionError(Exception):
@@ -32,6 +40,59 @@ class ExtentionError(Exception):
         )
 
 
+def detect_faces_yunet(
+    img_bgr: ndarray,
+    minSize: tuple[int, int] = (50, 50),
+    maxSize: tuple[int, int] | None = None,
+):
+    # 入力正規化（APIでは必須）
+    if img_bgr.ndim == 2:
+        img_bgr = cvtColor(img_bgr, COLOR_GRAY2BGR)
+    elif img_bgr.shape[2] == 4:
+        img_bgr = cvtColor(img_bgr, COLOR_BGRA2BGR)
+
+    H, W = img_bgr.shape[:2]
+    IN_W, IN_H = 320, 320
+
+    resized = resize(img_bgr, (IN_W, IN_H))
+
+    det = FaceDetectorYN.create(
+        model=MODEL_PATH,
+        config="",
+        input_size=(IN_W, IN_H),
+        score_threshold=0.88,
+        nms_threshold=0.3,
+        top_k=5000,
+    )
+    det.setInputSize((IN_W, IN_H))
+
+    faces = det.detect(resized)[1]
+    if faces is None:
+        return []
+
+    sx = W / IN_W
+    sy = H / IN_H
+
+    out = []
+    for f in faces:
+        x, y, fw, fh = f[:4]
+        x = int(x * sx)
+        y = int(y * sy)
+        fw = int(fw * sx)
+        fh = int(fh * sy)
+
+        if fw < minSize[0] or fh < minSize[1]:
+            continue
+        if maxSize is not None and (fw > maxSize[0] or fh > maxSize[1]):
+            continue
+
+        out.append((x, y, fw, fh))
+
+    # out に候補が入った後
+    out.sort(key=lambda b: b[2] * b[3], reverse=True)
+    return out[:1]
+
+
 def crop_face(
     input: str | Mat,
     width: int = 300,
@@ -39,15 +100,15 @@ def crop_face(
     margin: float = 1.75,
     show: bool = False,
     frame: bool = False,
-    classifier: Literal[
-        "default",
-        "alt",
-        "alt2",
-    ] = "default",
+    # classifier: Literal[
+    #     "default",
+    #     "alt",
+    #     "alt2",
+    # ] = "default",
     minSize: tuple[int, int] = (50, 50),
-    maxSize: tuple[int, int] = (100, 100),
-    scaleFactor: float = 1.1,
-    minNeighbors: int = 4,
+    maxSize: tuple[int, int] | None = None,
+    # scaleFactor: float = 1.1,
+    # minNeighbors: int = 4,
 ) -> Mat | None:
     """Generate face cropped jpg file
 
@@ -98,21 +159,22 @@ def crop_face(
     else:
         img = input
 
-    gray = cvtColor(img, COLOR_BGR2GRAY)
+    # gray = cvtColor(img, COLOR_BGR2GRAY)
     aspect_ratio = height / width
 
-    cascade_path = os.path.join(
-        haarcascades, "haarcascade_frontalface_" + classifier + ".xml"
-    )
+    # cascade_path = os.path.join(
+    #     haarcascades, "haarcascade_frontalface_" + classifier + ".xml"
+    # )
 
-    face_cascade = CascadeClassifier(cascade_path)
-    faces = face_cascade.detectMultiScale(
-        image=gray,
-        scaleFactor=scaleFactor,
-        minNeighbors=minNeighbors,
-        minSize=minSize,
-        maxSize=maxSize,
-    )
+    # face_cascade = CascadeClassifier(cascade_path)
+    # faces = face_cascade.detectMultiScale(
+    #     image=gray,
+    #     scaleFactor=scaleFactor,
+    #     minNeighbors=minNeighbors,
+    #     minSize=minSize,
+    #     maxSize=maxSize,
+    # )
+    faces = detect_faces_yunet(img, minSize=minSize, maxSize=maxSize)
 
     face = None
     for x, y, w, h in faces:
@@ -164,15 +226,15 @@ def crop_face_to_file(
     margin: float = 1.75,
     show: bool = False,
     frame: bool = False,
-    classifier: Literal[
-        "default",
-        "alt",
-        "alt2",
-    ] = "default",
+    # classifier: Literal[
+    #     "default",
+    #     "alt",
+    #     "alt2",
+    # ] = "default",
     minSize: tuple[int, int] = (50, 50),
-    maxSize: tuple[int, int] = (100, 100),
-    scaleFactor: float = 1.1,
-    minNeighbors: int = 4,
+    maxSize: tuple[int, int] | None = None,
+    # scaleFactor: float = 1.1,
+    # minNeighbors: int = 4,
 ) -> bool:
     """Generate face cropped jpg file
 
@@ -220,11 +282,11 @@ def crop_face_to_file(
         margin=margin,
         show=show,
         frame=frame,
-        classifier=classifier,
+        # classifier=classifier,
         minSize=minSize,
         maxSize=maxSize,
-        scaleFactor=scaleFactor,
-        minNeighbors=minNeighbors,
+        # scaleFactor=scaleFactor,
+        # minNeighbors=minNeighbors,
     )
     if face is None:
         return False
@@ -262,6 +324,8 @@ def crop_face_dir(
     for jpg in jpg_list:
         if verbose:
             print(f"Processing `{jpg}`... ", end="")
-        crop_face_to_file(input_dir + "/" + jpg, output_dir + "/" + jpg, **options)
+        ret = crop_face_to_file(
+            input_dir + "/" + jpg, output_dir + "/" + jpg, **options
+        )
         if verbose:
-            print("Done")
+            print(f"Done." if ret else "No face detected.")
