@@ -14,14 +14,28 @@ pip install git+https://github.com/Yuu-Miino-NUE/crop_tools
 from crop_tools import crop_face, crop_face_dir
 
 # For a single file
-crop_face(input='input/test1.jpg', output='output/htu_test1.jpg',
-    width=250, height=250, margin = 1.8, frame = True, classifier='alt',
-    minSize=(50, 50), maxSize=(100, 100), scaleFactor=1.1, minNeighbors=4)
+crop_face_to_file(
+    input="input/test1.jpg",
+    output="output/htu_test1.jpg",
+    width=250,
+    height=250,
+    margin=2.0,
+    frame=True,
+    # minSize=(50, 50),
+    # maxSize=(100, 100),
+)
 
 # For all files in a directory
-crop_face_dir(input_dir='input', output_dir='output', verbose=True,
-    width=200, height=200, margin=1.8, frame=True, classifier='default',
-    maxSize=(100,100), scaleFactor=1.2)
+crop_face_dir(
+    input_dir="input",
+    output_dir="output",
+    verbose=True,
+    width=375,
+    height=450,
+    margin=1.8,
+    frame=True,
+    # maxSize=(100, 100),
+)
 ```
 
 # 関数の仕様
