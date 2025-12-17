@@ -6,13 +6,10 @@ crop_face_to_file(
     output="output/htu_test1.jpg",
     width=250,
     height=250,
-    margin=1.8,
+    margin=2.0,
     frame=True,
-    classifier="alt",
-    minSize=(50, 50),
-    maxSize=(100, 100),
-    scaleFactor=1.1,
-    minNeighbors=4,
+    # minSize=(50, 50),
+    # maxSize=(100, 100),
 )
 
 # For all files in a directory
@@ -20,11 +17,9 @@ crop_face_dir(
     input_dir="input",
     output_dir="output",
     verbose=True,
-    width=200,
-    height=200,
+    width=375,
+    height=450,
     margin=1.8,
     frame=True,
-    classifier="default",
-    maxSize=(100, 100),
-    scaleFactor=1.2,
+    # maxSize=(100, 100),
 )
