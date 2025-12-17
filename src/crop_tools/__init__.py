@@ -9,8 +9,6 @@ from cv2 import (
     waitKey,
     resize,
     cvtColor,
-    # CascadeClassifier,
-    # COLOR_BGR2GRAY,
     COLOR_GRAY2BGR,
     COLOR_BGRA2BGR,
     rectangle,
@@ -18,10 +16,7 @@ from cv2 import (
     FaceDetectorYN,
 )
 
-# from cv2.data import haarcascades
 from numpy import array, maximum, minimum, ndarray
-
-# from typing import Literal
 import os
 
 EXTENSIONS = ("jpg", "jpeg")
@@ -45,7 +40,6 @@ def detect_faces_yunet(
     minSize: tuple[int, int] = (50, 50),
     maxSize: tuple[int, int] | None = None,
 ):
-    # 入力正規化（APIでは必須）
     if img_bgr.ndim == 2:
         img_bgr = cvtColor(img_bgr, COLOR_GRAY2BGR)
     elif img_bgr.shape[2] == 4:
@@ -88,7 +82,6 @@ def detect_faces_yunet(
 
         out.append((x, y, fw, fh))
 
-    # out に候補が入った後
     out.sort(key=lambda b: b[2] * b[3], reverse=True)
     return out[:1]
 
@@ -100,15 +93,8 @@ def crop_face(
     margin: float = 1.75,
     show: bool = False,
     frame: bool = False,
-    # classifier: Literal[
-    #     "default",
-    #     "alt",
-    #     "alt2",
-    # ] = "default",
     minSize: tuple[int, int] = (50, 50),
     maxSize: tuple[int, int] | None = None,
-    # scaleFactor: float = 1.1,
-    # minNeighbors: int = 4,
 ) -> Mat | None:
     """Generate face cropped jpg file
 
@@ -126,16 +112,10 @@ def crop_face(
         Flag to immediately show the output image, by default ``False``.
     frame : bool, optional
         Flag to show the frame of the detected face, by default ``False``.
-    classifier : Literal[ 'default', 'alt', 'alt2', ], optional
-        Cascade classifier, by default ``default``.
     minSize : Tuple[int, int], optional
         Minimum possible object size, by default ``(50, 50)``.
     maxSize : Tuple[int, int], optional
         Maximum possible object size, by default ``(100, 100)``.
-    scaleFactor : float, optional
-        Parameter specifying how much the image size is reduced at each image scale, by default ``1.1``.
-    minNeihbors : int
-        Parameter specifying how many neighbors each candidate rectangle should have to retain it, by default ``4``.
 
     Return
     ------
@@ -159,21 +139,7 @@ def crop_face(
     else:
         img = input
 
-    # gray = cvtColor(img, COLOR_BGR2GRAY)
     aspect_ratio = height / width
-
-    # cascade_path = os.path.join(
-    #     haarcascades, "haarcascade_frontalface_" + classifier + ".xml"
-    # )
-
-    # face_cascade = CascadeClassifier(cascade_path)
-    # faces = face_cascade.detectMultiScale(
-    #     image=gray,
-    #     scaleFactor=scaleFactor,
-    #     minNeighbors=minNeighbors,
-    #     minSize=minSize,
-    #     maxSize=maxSize,
-    # )
     faces = detect_faces_yunet(img, minSize=minSize, maxSize=maxSize)
 
     face = None
@@ -226,15 +192,8 @@ def crop_face_to_file(
     margin: float = 1.75,
     show: bool = False,
     frame: bool = False,
-    # classifier: Literal[
-    #     "default",
-    #     "alt",
-    #     "alt2",
-    # ] = "default",
     minSize: tuple[int, int] = (50, 50),
     maxSize: tuple[int, int] | None = None,
-    # scaleFactor: float = 1.1,
-    # minNeighbors: int = 4,
 ) -> bool:
     """Generate face cropped jpg file
 
@@ -254,16 +213,10 @@ def crop_face_to_file(
         Flag to immediately show the output image, by default ``False``.
     frame : bool, optional
         Flag to show the frame of the detected face, by default ``False``.
-    classifier : Literal[ 'default', 'alt', 'alt2', ], optional
-        Cascade classifier, by default ``default``.
     minSize : Tuple[int, int], optional
         Minimum possible object size, by default ``(50, 50)``.
     maxSize : Tuple[int, int], optional
         Maximum possible object size, by default ``(100, 100)``.
-    scaleFactor : float, optional
-        Parameter specifying how much the image size is reduced at each image scale, by default ``1.1``.
-    minNeihbors : int
-        Parameter specifying how many neighbors each candidate rectangle should have to retain it, by default ``4``.
 
     Raises
     ------
@@ -282,11 +235,8 @@ def crop_face_to_file(
         margin=margin,
         show=show,
         frame=frame,
-        # classifier=classifier,
         minSize=minSize,
         maxSize=maxSize,
-        # scaleFactor=scaleFactor,
-        # minNeighbors=minNeighbors,
     )
     if face is None:
         return False
